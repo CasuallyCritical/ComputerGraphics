@@ -1,0 +1,512 @@
+<!doctype html>
+<! -- Code made by Jonathan Gerraughty -->
+<html>
+<head>
+<script src="https://trkern.github.io/three.js"></script>
+<title>3D Engine!</title>
+</head>
+
+<body onload="">
+<br>
+<canvas id="canv", style="border:1px solid", width=500, height=500>
+
+</canvas>
+<script>
+
+//
+/*
+Created by Jonathan Gerraughty
+Todo:
+1) Add potential file loader to read .obj format?
+*/
+
+//Bunny Model, supplied by Professor kern
+var bunverts = [[0.45, -2.75, 4.6], [-1.15, -2.8, 4.65], [-0.65, -3.15, 5], [-2.6, 2.75, -2.6], [-1.05, 2.55, -3.15], [-3.5, 3.7, -3.15], [-0.1, -1.1, -4.45], [-1.35, -0.15, -3.85], [0.3, -0.2, -4.1], [2.05, 0.9, -3.95], [1.25, 2, -4.1], [1.95, 1.3, -3.25], [-0.4, 0.05, -4.6], [-2.8, 4.3, 0.2], [-1.7, 3.55, -1.45], [-1.55, 2.45, -1.85], [2.05, -0.05, -3.35], [-1.45, 0.95, 1.25], [0.05, 1.1, 1.9], [-0.45, 0.8, -0.55], [-4.05, 3.8, -3.75], [0.85, 2.4, -2.3], [-0.95, 1.7, -1.85], [-1.4, 0.9, -1.85], [-0.15, 0.9, -1.5], [-1.35, -4.15, 4.2], [1.7, 0.55, -2.7], [2.2, -3.8, 1.1], [2.35, -3.1, 1.15], [2.05, -3.45, 1.95], [1.9, -4, 0.15], [1.55, -4.1, 2.15], [-2.5, -4.9, 2], [-2.9, -4.3, 0.1], [-3.1, -4.95, -1.45], [0.1, -4.05, 4.7], [0.15, -4.8, 3.2], [-1.7, -3.6, 3.5], [-2.4, -4.1, 2.65], [-1.25, -4.9, 2.4], [1.5, -0.15, 1], [0.75, 0.8, 0.6], [1, 0.3, 2.35], [1.55, -0.75, 0.55], [1.4, -1.3, -3.4], [1.15, -0.4, -3.3], [1.5, -0.8, -1.9], [0.9, 0.15, -2], [1.7, -1.5, -2.2], [-2.2, 3.05, -0.15], [-1.35, -3.35, -2.35], [-2.35, -2.35, -2.65], [-1.3, -2.5, -3.75], [1.9, -0.95, 1.6], [1.6, -0.85, 2.55], [1.5, -2.4, -1.55], [1.5, -2.15, -2.9], [2.3, -1.75, 1.75], [2.45, -2.35, 0.9], [-1.15, -1.75, -4.2], [0.15, -1.9, -4.25], [1.85, -4.8, -2.35], [1.2, -3.95, -1.8], [1.55, -4.75, -1.25], [0.9, -3.45, 3.6], [0.8, -4.2, 3.8], [-1.8, 2.9, 0.35], [-3, 3.65, 0.7], [0.7, 0.35, -0.8], [1.5, -1.15, -1.25], [1.4, -2, -0.75], [1.05, -3.6, -0.55], [1.6, -0.85, -0.4], [0.05, -4.9, -2.75], [-0.05, -4.15, -1.95], [0.85, -4.3, -2.85], [0.25, -2.6, 4], [2.25, -1.2, 0.15], [-3.85, 2.35, -2.9], [-4.95, 3.35, -2.6], [-4.35, 2.45, -3.15], [2.3, -1.95, -0.25], [2.1, -3.1, 0.15], [0.3, -1.4, 3.9], [1.05, 1.45, -2.65], [1.45, -4.75, 2.3], [-0.75, 2.65, -1.5], [-0.4, 2.55, -2.05], [-1.6, 4.25, -0.45], [0.65, 1.35, -2], [-1.2, 0.85, -4.3], [-0.1, 1.45, -4.4], [0.45, 0.5, -4.65], [1.85, -2, 2.7], [-0.95, -0.95, 3.95], [1.3, -1.5, 3.35], [-2.4, 4.05, 0.2], [2.15, -4.85, -0.35], [1.7, -3.35, 2.55], [-0.55, -3.55, -2.25], [-0.75, -4, -2.4], [2.2, -4.3, -0.5], [0.6, 0, 3.2], [0.9, -3.15, -2], [-1.65, 1.75, -2.75], [-0.95, -2.55, 4.05], [-2.25, -1.65, 3.45], [-2.45, -2.45, 3.05], [-2.7, -3.85, -0.5], [-3, -4.3, -1], [-0.1, -4.9, -0.65], [0.95, -4.85, -0.85], [-0.2, -4.7, -0.45], [-1.85, -0.4, 3.2], [-1.6, 1.8, -3.5], [-0.05, 2.2, -4.55], [-1.5, 2.35, -3.6], [-3.2, -1.25, 1.45], [-2.6, -0.95, 2.3], [-2.85, -3.65, 2.45], [-1.1, 2.45, -2.65], [-1.15, 0.4, 3], [0.65, -2.6, -3.6], [-2.1, -2.8, -1.8], [0.4, 2.65, -3.45], [-4.85, 4.2, -2.95], [-1.8, -1.4, -3.9], [0.1, -3.4, -2.35], [0, -3.6, -2], [-2.7, -1, -0.2], [-2.6, -1.6, -1.25], [-2.9, -2.1, -0.95], [-1.85, -3.8, -0.8], [1.45, 0.05, -4.55], [1.4, -4.9, -0.75], [1.25, -4.85, -2.95], [-2.45, -0.3, -0.35], [-2.45, -0.5, -1.4], [-3.55, -3, 0.05], [-3.4, -1.45, -0.45], [-0.8, -4.55, -3.35], [-1.9, -4.6, 1.5], [-0.95, -4.7, -0.65], [-1.5, -4.95, -3.25], [-2, -4.95, -1.9], [-1.55, -4.05, -2.15], [-3.85, 3.25, -3.35], [-1.6, 0.45, -0.45], [-2.8, 2.2, -3.45], [-2.3, 0.2, 1.55], [-2.05, -4.9, 1.85], [-2.4, -4.85, -0.9], [-2.55, -0.8, 1.45], [0.5, -4.95, -1.5], [-3.65, -1.85, 0.35], [-1.75, 0.35, -2.75], [-2.45, -0.7, -2.35], [-1.85, 0.65, -1.5], [1.15, -4.65, -0.5], [0.1, -4.85, -1], [-0.6, -4.95, -0.85], [-1.2, -4.7, -0.85], [-3.15, -2.7, 1.9], [-3.1, -3.9, 1.25], [0.4, -4.9, 1.65], [1.15, -4.95, 1.6], [0, -4.85, 1.7], [0.2, -4.9, 2.3], [1.45, -4.8, 0.55], [1.6, -4.9, 0.15], [0.85, -4.6, 1.6], [-0.5, -4.75, 0.9], [1.3, -4.9, 1.1], [-0.45, -4.9, 2.55], [-0.85, -4.8, 2.35], [1.1, -4.6, 0.85], [-0.95, -4.75, 1.65], [-0.25, -3.3, -3.15], [-0.3, -4.95, -2.15], [-1.3, -5, -1.35], [0.45, -4.9, -1.95], [1.25, -4.6, 0.35], [-1.5, -4.75, -1.05], [-0.95, -4.95, -1.15], [-0.65, -4.85, -1.8], [-0.45, -4.9, -1.25]];
+var bunfaces = [[0,1,2],[3,4,5],[6,7,8],[9,10,11],[12,8,7],[13,14,15],[9,11,16],[17,18,19],[5,4,20],[10,21,11],[22,23,24],[1,25,2],[11,26,16],[27,28,29],[30,27,31],[32,33,34],[35,25,36],[37,38,39],[40,41,42],[40,42,43],[44,45,46],[45,47,46],[44,46,48],[41,19,18],[49,13,15],[50,51,52],[53,42,54],[48,55,56],[53,57,58],[59,6,60],[26,47,45],[58,57,28],[46,55,48],[61,62,63],[64,65,36],[66,67,49],[46,47,68],[47,24,68],[46,69,55],[46,68,69],[62,55,70],[62,71,63],[62,70,71],[69,70,55],[28,57,29],[69,68,72],[69,72,70],[73,74,75],[53,54,57],[72,68,41],[19,41,68],[64,76,0],[65,64,0],[43,72,40],[40,72,41],[77,53,58],[78,79,80],[81,58,82],[77,58,81],[43,42,53],[82,27,30],[27,82,28],[58,28,82],[83,76,64],[45,16,26],[11,84,26],[11,21,84],[35,2,25],[31,64,85],[86,87,88],[26,84,89],[90,91,92],[93,29,57],[84,21,89],[85,64,36],[26,89,47],[83,94,76],[0,35,65],[54,95,93],[89,24,47],[13,49,67],[66,86,96],[86,88,96],[97,30,31],[29,98,31],[50,99,100],[87,86,22],[93,98,29],[101,30,97],[93,95,64],[102,83,95],[98,93,64],[64,95,83],[54,102,95],[86,66,22],[24,89,22],[98,64,31],[31,27,29],[74,103,62],[104,3,78],[105,106,107],[108,109,33],[110,111,112],[39,38,32],[94,113,106],[90,92,12],[114,115,91],[114,116,115],[3,79,78],[117,106,118],[37,119,38],[105,94,106],[120,3,104],[115,10,91],[90,114,91],[37,107,119],[105,107,37],[74,73,100],[121,18,17],[96,67,66],[83,102,94],[89,21,22],[76,94,105],[0,2,35],[87,22,21],[52,60,122],[121,113,94],[1,0,76],[1,76,105],[123,51,50],[21,10,124],[4,124,116],[87,124,120],[68,24,19],[120,4,3],[87,21,124],[10,115,124],[120,124,4],[102,121,94],[96,13,67],[124,115,116],[5,125,79],[102,18,121],[96,88,13],[53,77,43],[22,49,15],[102,42,18],[5,79,3],[19,24,23],[126,6,59],[42,41,18],[5,20,125],[61,75,62],[127,103,128],[70,72,81],[55,62,103],[48,56,44],[71,82,30],[103,74,128],[20,4,116],[30,101,71],[72,77,81],[43,77,72],[129,130,131],[130,123,132],[63,71,101],[9,16,133],[70,81,71],[99,128,74],[81,82,71],[61,63,134],[135,75,61],[8,45,44],[6,44,60],[6,8,44],[136,137,130],[10,9,133],[136,130,129],[138,139,131],[88,87,120],[100,73,140],[60,44,56],[99,74,100],[141,142,112],[143,144,145],[20,146,125],[125,146,80],[91,10,92],[17,19,147],[138,131,108],[146,116,80],[74,62,75],[131,139,129],[146,20,116],[148,80,116],[108,132,109],[130,132,108],[118,106,113],[34,109,132],[148,116,114],[13,88,14],[14,88,120],[66,49,22],[17,136,149],[10,133,92],[140,145,100],[141,150,151],[59,60,52],[145,50,100],[126,7,6],[90,12,7],[104,22,120],[121,149,113],[139,117,152],[153,134,111],[139,154,117],[149,152,113],[155,156,157],[155,157,23],[136,17,147],[117,118,152],[152,118,113],[104,23,22],[157,156,137],[139,152,129],[19,23,157],[102,54,42],[149,121,17],[112,111,158],[159,110,160],[157,136,147],[157,137,136],[157,147,19],[155,7,156],[155,114,90],[155,90,7],[105,37,1],[25,1,37],[104,155,23],[130,51,123],[80,79,125],[156,7,126],[51,156,126],[37,39,25],[132,123,145],[132,145,144],[153,111,110],[54,93,57],[141,161,142],[107,162,119],[162,107,106],[132,144,34],[38,119,32],[106,117,162],[31,85,97],[59,52,126],[162,163,119],[163,33,119],[32,119,33],[162,138,163],[162,117,154],[14,120,15],[154,138,162],[22,15,120],[149,129,152],[163,138,33],[137,156,130],[145,140,143],[32,151,150],[33,109,34],[104,114,155],[123,50,145],[33,138,108],[51,126,52],[138,154,139],[130,156,51],[131,130,108],[153,110,159],[164,165,85],[166,164,167],[78,80,104],[80,148,104],[164,85,167],[97,85,165],[168,169,97],[165,164,170],[164,171,170],[168,97,172],[92,8,12],[173,167,36],[63,97,134],[92,133,8],[39,173,36],[167,85,36],[150,171,39],[174,173,39],[171,175,170],[141,112,171],[176,174,39],[133,45,8],[134,97,169],[39,36,25],[122,177,52],[45,133,16],[122,60,56],[32,150,39],[177,50,52],[171,176,39],[104,148,114],[143,140,73],[50,177,99],[97,63,101],[129,149,136],[172,97,165],[143,73,144],[122,103,177],[177,127,99],[177,103,127],[122,56,103],[144,73,178],[135,73,75],[171,166,176],[34,144,151],[144,178,179],[151,144,179],[73,135,178],[135,180,178],[135,61,180],[171,181,175],[179,182,151],[179,178,183],[184,160,178],[56,55,103],[183,178,160],[184,185,160],[112,158,171],[158,181,171],[171,150,141],[32,34,151],[151,182,161],[153,180,134],[180,61,134],[141,151,161],[171,164,166],[36,65,35],[185,159,160],[128,99,127],[134,158,111],[169,158,134],[158,169,181],[169,168,181],[181,168,175],[168,172,175],[175,172,170],[165,170,172],[182,179,183],[161,182,183],[183,160,161],[161,160,142],[112,142,160],[160,110,112]];
+var bunnorms = [];
+
+for(var i = 0; i < bunfaces.length; i++) {
+    var v1 = bunverts[bunfaces[i][0]];
+    var v2 = bunverts[bunfaces[i][1]];
+    var v3 = bunverts[bunfaces[i][2]];
+
+    var vec1 = new THREE.Vector3(v1[0], v1[1], v1[2]);
+    var vec2 = new THREE.Vector3(v2[0], v2[1], v2[2]);
+    var vec3 = new THREE.Vector3(v3[0], v3[1], v3[2]);
+    
+    var side1 = new THREE.Vector3().subVectors(vec2, vec1);
+    var side2 = new THREE.Vector3().subVectors(vec3, vec1);
+
+    var normal = new THREE.Vector3().crossVectors(side2, side1);
+
+    bunnorms[i] = [normal.x, normal.y, normal.z];
+}
+
+//Cube Model, defined by pen/paper
+var cubeverts = [[3, 3, 3], [-3, 3, 3], [-3, -3, 3], [3, -3, 3], [3, 3, -3], [3, -3, -3], [-3, 3, -3], [-3, -3, -3]];
+var cubefaces = [[0, 3, 2], [2, 1, 0], [0, 4, 5], [5, 3, 0], [0, 1, 6], [6, 4, 0], [1, 2, 7], [7, 6, 1], [6, 4, 5], [5, 7, 6], [3, 5, 7], [7, 2, 3]];
+var cubenorms = [[0, 0, -1], [0, 0, -1], [-1, 0, 0], [-1, 0, 0], [0, -1, 0], [0, -1, 0], [1, 0, 0], [1, 0, 0], [0, 0, 1], [0, 0, 1], [0, 1, 0], [0, 1, 0]]
+
+face_colors = ["red", "red","green","green","blue","blue","cyan","cyan","magenta","magenta","yellow","yellow"];
+
+var faces = cubefaces;
+var verts = cubeverts;
+var norms = cubenorms;
+
+var mode = "Cube";
+
+function solve_pixel_t(cx, cy, w0, w1, w2) {
+	var side1 = new THREE.Vector3().subVectors(w1,w0);
+    var side2 = new THREE.Vector3().subVectors(w2,w0);
+    var m = new THREE.Matrix3().set(
+        -side1.x, -side2.x,
+        -side1.y, -side2.y,
+        -side1.z, -side2.z
+        );
+    var answer = w0.clone().applyMatrix3(m.invert());
+    var t = answer.x;
+    var u = answer.y;
+    var v = answer.z;
+	
+	if (m.determinant() == 0) {return(null);}
+	if((u < 0) || (v < 0) || ((u + v) > 1)) {
+		return null;
+	}
+	
+	return t;
+	
+}
+
+//Set model to either cube or Bunny
+function setModel() {
+    var v = null;
+    var f = null;
+    var mesh = document.getElementById("mesh").value;
+    console.log(mesh);
+    if(mesh == "Bunny") {
+        v = bunverts;
+        f = bunfaces;
+        norms = bunnorms;
+        mode = "Bunny";
+    } else if(mesh == "Cube") {
+        v = cubeverts;
+        f = cubefaces;
+        norms = cubenorms;
+        mode = "Cube";
+    }
+    verts = v;
+    faces = f;
+    
+    draw_persp();
+}
+
+//These are used to convert local "world" space to pixel space
+function lerp(a, b, t) {
+    return a + (b-a) * t;
+}
+
+function inverseLerp(a, b, x) {
+    return (x-a) / (b-a);
+}
+
+function convert_x_graph_to_canvas(x, x_graph_min, x_graph_max) {
+    var ctx = document.getElementById("canv");
+    var width = ctx.width;
+
+    var fct_x = inverseLerp(x_graph_min, x_graph_max, x);
+
+    var xx = lerp(0, width, fct_x);
+    
+    return xx;
+}
+
+function convert_y_graph_to_canvas(x, x_graph_min, x_graph_max) {
+    var ctx = document.getElementById("canv");
+    var width = ctx.height;
+
+    var fct_x = inverseLerp(x_graph_min, x_graph_max, x);
+
+    var xx = lerp(0, width, fct_x);
+    
+    return xx;
+}
+
+//Rotation Matrix functions for Three.JS
+function rotation_matrix_x(theta) {
+    var sin = Math.sin(theta);
+    var cos = Math.cos(theta);
+    var mat = new THREE.Matrix3();
+    mat.set(1, 0, 0, 0, cos, -sin, 0, sin, cos);
+    return mat;
+}
+
+function rotation_matrix_y(theta) {
+    var sin = Math.sin(theta);
+    var cos = Math.cos(theta);
+    var mat = new THREE.Matrix3();
+    mat.set(cos, 0, -sin, 0, 1, 0, sin, 0, cos);
+    return mat;
+}
+
+function applyMatrix3(mat,v) {
+    var m = mat.toArray();
+    return(new THREE.Vector3(
+        m[0]*v.x + m[3]*v.y + m[6]*v.z,
+        m[1]*v.x + m[4]*v.y + m[7]*v.z,
+        m[2]*v.x + m[5]*v.y + m[8]*v.z
+    ));
+ }
+
+function rotation_matrix_z(theta) {
+    var sin = Math.sin(theta);
+    var cos = Math.cos(theta);
+    var mat = new THREE.Matrix3();
+    mat.set(cos, -sin, 0, sin, cos, 0, 0, 0, 1);
+    return mat;    
+}
+
+function project(v) {
+
+    return new THREE.Vector3(v.x/v.z, v.y/v.z, 1);
+}
+
+function set_rgba(imagedata,x,y,r,g,b,a) {
+ var pos = y*imagedata.width+x;
+ imagedata.data[pos*4] = r;
+ imagedata.data[pos*4+1] = g;
+ imagedata.data[pos*4+2] = b;
+ imagedata.data[pos*4+3] = a;
+ }
+ 
+ function HSL_to_RGB(H,S,L) {
+        var R,G,B;
+        var C;
+        if (L <= .5) {
+            C = S*2*L;
+            }
+        else {
+            C = S*2*(1-L);
+            }
+        var max = L+C/2;
+        var min = L-C/2;
+        if (H < 60) {
+            R = max;
+            G = convert_a_to_b(H,0,60,min,max);
+            B = min;
+            }
+        else if (H < 120) {
+            R = convert_a_to_b(H,60,120,max,min);
+            G = max;
+            B = min;
+            }
+        else if (H < 180) {
+            R = min;
+            G = max;
+            B = convert_a_to_b(H, 120, 180, min, max)
+            }
+        else if (H < 240) {
+            R = min;
+            G = convert_a_to_b(H,180,240,max,min);
+            B = max;
+            }
+        else if (H < 300) {
+            R = convert_a_to_b(H,240,300,min,max);
+            G = min;
+            B = max;
+            }
+        else {
+            R = max;
+            G = min;
+            B = convert_a_to_b(H,300, 360, max, min);
+            }
+        return([255*R,255*G,255*B]);
+    }
+
+function draw_persp_zbuff() {
+	var x,y;
+    zbuffer = [];
+    for (x = 0; x < 500; x++) {
+        zbuffer.push([]);
+        for (y = 0; y < 500; y++) {
+            zbuffer[x].push(Infinity);
+            }
+        }
+	
+
+    var canvas = document.getElementById("canv");
+    var ctx = canvas.getContext("2d");
+	
+	var imagedata = ctx.getImageData(0,0,500,500);
+
+    var zdepth = Number(document.getElementById("zdepth").value);
+
+    //console.log(zdepth);
+
+    //Clear screen so we don't get a mess of redraws
+    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+    var rot_y = 90 / (Math.PI * 180);
+
+    //Create general matrices for rotation axis
+    var mat_x = rotation_matrix_x(Number(document.getElementById("xrot").value));
+    var mat_y = rotation_matrix_y(Number(document.getElementById("yrot").value));
+    var mat_z = rotation_matrix_z(Number(document.getElementById("zrot").value));
+
+    
+
+    //Loop through correct faces
+    for(let i = 0; i < faces.length; i++) {
+        var v1 = verts[faces[i][0]];
+        var v2 = verts[faces[i][1]];
+        var v3 = verts[faces[i][2]];
+
+        var vec1 = new THREE.Vector3(v1[0], v1[1], v1[2]);
+        var vec2 = new THREE.Vector3(v2[0], v2[1], v2[2]);
+        var vec3 = new THREE.Vector3(v3[0], v3[1], v3[2]);
+
+
+        //Rotation Matrix goes ZYX, order matters or you will lockup axis
+        var t1 = applyMatrix3(mat_z, vec1);
+        t1 = applyMatrix3(mat_y, t1);
+        t1 = applyMatrix3(mat_x, t1);
+        var t2 = applyMatrix3(mat_z, vec2);
+        t2 = applyMatrix3(mat_y, t2);
+        t2 = applyMatrix3(mat_x, t2);
+        var t3 = applyMatrix3(mat_z, vec3);
+        t3 = applyMatrix3(mat_y, t3);
+        t3 = applyMatrix3(mat_x, t3);
+
+        t1.add(new THREE.Vector3(0, 0, zdepth));
+        t2.add(new THREE.Vector3(0, 0, zdepth));
+        t3.add(new THREE.Vector3(0, 0, zdepth));
+
+        var P = new THREE.Vector3()
+
+        var vc = new THREE.Vector3().subVectors(t1, P);
+
+        var normal = null;
+        var vn = null;
+        normal = new THREE.Vector3(norms[i][0], norms[i][1], norms[i][2])
+        vn = applyMatrix3(mat_z, normal);
+        vn = applyMatrix3(mat_y, vn)
+        vn = applyMatrix3(mat_x, vn);
+
+        var direction = vn.dot(vc)
+
+        console.log(direction)
+
+        
+
+        var p1 = project(t1);
+        var p2 = project(t2);
+        var p3 = project(t3);
+
+        if(direction >= 0) {
+            
+           
+
+            //Draw Triangle by going from point1, to point 2, to point 3, back to point 1
+			
+			var c0x = convert_x_graph_to_canvas(p1.x, 5, -5);
+			var c0y = convert_y_graph_to_canvas(p1.y, 5, -5);
+			var c1x = convert_x_graph_to_canvas(p2.x, 5, -5);
+			var c1y = convert_y_graph_to_canvas(p2.y, 5, -5);
+			var c2x = convert_x_graph_to_canvas(p3.x, 5, -5);
+			var c2y = convert_y_graph_to_canvas(p3.y, 5, -5);
+			
+			var minx = Math.round(Math.max(0,Math.min(c0x,c1x,c2x)));
+			var maxx = Math.round(Math.min(499,Math.max(c0x,c1x,c2x)));
+			var miny = Math.round(Math.max(0,Math.min(c0y,c1y,c2y)));
+			var maxy = Math.round(Math.min(499,Math.max(c0y,c1y,c2y)));
+			
+			var step = 0
+			for(var x = minx; x <= maxx; x++) {
+				for(var y = miny; y <= maxy; y++) {
+					step++;
+					var depth = solve_pixel_t(x,y,t1,t2,t3)
+					
+					if(depth != null) {
+						if (zbuffer[x][y] > depth) {
+							var rgb = HSL_to_RGB(step, 1, 0.5);
+							set_rgba(imagedata, x, y, rgb[0], rgb[1], rgb[2], 255)
+							zbuffer[x][y] = depth;
+						}
+					}
+				}
+			}
+
+            
+            
+            
+        }
+
+        
+    }
+    
+
+    //Apply stroke once to complete drawing
+    ctx.putImageData(imagedata, 0,0);
+}
+
+function draw_persp() {
+    var canvas = document.getElementById("canv");
+    var ctx = canvas.getContext("2d");
+
+    var zdepth = Number(document.getElementById("zdepth").value);
+
+    //console.log(zdepth);
+
+    //Clear screen so we don't get a mess of redraws
+    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+    var rot_y = 90 / (Math.PI * 180);
+
+    //Create general matrices for rotation axis
+    var mat_x = rotation_matrix_x(Number(document.getElementById("xrot").value));
+    var mat_y = rotation_matrix_y(Number(document.getElementById("yrot").value));
+    var mat_z = rotation_matrix_z(Number(document.getElementById("zrot").value));
+
+    
+
+    //Loop through correct faces
+    for(let i = 0; i < faces.length; i++) {
+        ctx.beginPath();
+        var v1 = verts[faces[i][0]];
+        var v2 = verts[faces[i][1]];
+        var v3 = verts[faces[i][2]];
+
+        var vec1 = new THREE.Vector3(v1[0], v1[1], v1[2]);
+        var vec2 = new THREE.Vector3(v2[0], v2[1], v2[2]);
+        var vec3 = new THREE.Vector3(v3[0], v3[1], v3[2]);
+
+
+        //Rotation Matrix goes ZYX, order matters or you will lockup axis
+        var t1 = applyMatrix3(mat_z, vec1);
+        t1 = applyMatrix3(mat_y, t1);
+        t1 = applyMatrix3(mat_x, t1);
+        var t2 = applyMatrix3(mat_z, vec2);
+        t2 = applyMatrix3(mat_y, t2);
+        t2 = applyMatrix3(mat_x, t2);
+        var t3 = applyMatrix3(mat_z, vec3);
+        t3 = applyMatrix3(mat_y, t3);
+        t3 = applyMatrix3(mat_x, t3);
+
+        t1.add(new THREE.Vector3(0, 0, zdepth));
+        t2.add(new THREE.Vector3(0, 0, zdepth));
+        t3.add(new THREE.Vector3(0, 0, zdepth));
+
+        var P = new THREE.Vector3()
+
+        var vc = new THREE.Vector3().subVectors(t1, P);
+
+        var normal = null;
+        var vn = null;
+        normal = new THREE.Vector3(norms[i][0], norms[i][1], norms[i][2])
+        vn = applyMatrix3(mat_z, normal);
+        vn = applyMatrix3(mat_y, vn)
+        vn = applyMatrix3(mat_x, vn);
+
+        var direction = vn.dot(vc)
+
+        console.log(direction)
+
+        
+
+        t1 = project(t1);
+        t2 = project(t2);
+        t3 = project(t3);
+
+        if(direction >= 0) {
+            
+           
+
+            //Draw Triangle by going from point1, to point 2, to point 3, back to point 1
+
+            ctx.moveTo(convert_x_graph_to_canvas(t1.x, 5, -5), convert_y_graph_to_canvas(t1.y, 5, -5));
+            ctx.lineTo(convert_x_graph_to_canvas(t2.x, 5, -5), convert_y_graph_to_canvas(t2.y, 5, -5));
+            ctx.lineTo(convert_x_graph_to_canvas(t3.x, 5, -5), convert_y_graph_to_canvas(t3.y, 5, -5));
+            ctx.lineTo(convert_x_graph_to_canvas(t1.x, 5, -5), convert_y_graph_to_canvas(t1.y, 5, -5));
+
+            ctx.fillStyle = `rgb(${vn.x * 255},${vn.y * 255},${vn.z * 255})`;
+            
+            
+        }
+
+        ctx.fill();
+        ctx.stroke();
+    }
+    
+
+    //Apply stroke once to complete drawing
+    
+}
+
+//Orthographic projection: Ignore X, if I was to make this into a Perspective projection I would need to divide x and y by the z coordinate.
+function draw_ortho() {
+    var canvas = document.getElementById("canv");
+    var ctx = canvas.getContext("2d");
+
+    //Clear screen so we don't get a mess of redraws
+    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+    var rot_y = 90 / (Math.PI * 180);
+
+    //Create general matrices for rotation axis
+    var mat_x = rotation_matrix_x(document.getElementById("xrot").value);
+    var mat_y = rotation_matrix_y(document.getElementById("yrot").value);
+    var mat_z = rotation_matrix_z(document.getElementById("zrot").value);
+
+    ctx.beginPath();
+
+    //Loop through correct faces
+    for(let i = 0; i < faces.length; i++) {
+        var v1 = verts[faces[i][0]];
+        var v2 = verts[faces[i][1]];
+        var v3 = verts[faces[i][2]];
+
+        var vec1 = new THREE.Vector3(v1[0], v1[1], v1[2]);
+        var vec2 = new THREE.Vector3(v2[0], v2[1], v2[2]);
+        var vec3 = new THREE.Vector3(v3[0], v3[1], v3[2]);
+
+
+
+
+        //Rotation Matrix goes ZYX, order matters or you will lockup axis
+        var t1 = applyMatrix3(mat_z, vec1);
+        t1 = applyMatrix3(mat_y, t1);
+        t1 = applyMatrix3(mat_x, t1);
+        var t2 = applyMatrix3(mat_z, vec2);
+        t2 = applyMatrix3(mat_y, t2);
+        t2 = applyMatrix3(mat_x, t2);
+        var t3 = applyMatrix3(mat_z, vec3);
+        t3 = applyMatrix3(mat_y, t3);
+        t3 = applyMatrix3(mat_x, t3);
+
+        //Draw Triangle by going from point1, to point 2, to point 3, back to point 1
+
+        ctx.moveTo(convert_x_graph_to_canvas(t1.x, 5, -5), convert_y_graph_to_canvas(t1.y, 5, -5));
+        ctx.lineTo(convert_x_graph_to_canvas(t2.x, 5, -5), convert_y_graph_to_canvas(t2.y, 5, -5));
+        ctx.lineTo(convert_x_graph_to_canvas(t3.x, 5, -5), convert_y_graph_to_canvas(t3.y, 5, -5));
+        ctx.lineTo(convert_x_graph_to_canvas(t1.x, 5, -5), convert_y_graph_to_canvas(t1.y, 5, -5));
+    }
+
+    //Apply stroke once to complete drawing
+    ctx.stroke();
+    
+}
+
+//drawLine(100, 200, 300, 400);
+</script>
+<form>
+    <select id="mesh" onchange="setModel()">
+        <option value="Cube"> Cube </option>
+        <option value="Bunny"> Bunny </option>
+    </select>
+</form>
+<input type="number" id="xrot" value=0 oninput="draw_persp_zbuff()" step=.01>
+<input type="number" id="yrot" value=0 oninput="draw_persp_zbuff()" step=.01>
+<input type="number" id="zrot" value=0 oninput="draw_persp_zbuff()" step=.01>
+<input type="number" id="zdepth" value=7 oninput="draw_persp_zbuff()" step=.2>
+</body>
+
+</html>
